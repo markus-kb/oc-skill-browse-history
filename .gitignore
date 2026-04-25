@@ -1,0 +1,33 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Dependencies and package manager output
+node_modules/
+.pnpm-store/
+
+# Logs
+*.log
+logs/
+
+# Test and temporary output
+.artifacts/
+coverage/
+tmp/
+temp/
+*.tmp
+
+# Local SQLite data
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
