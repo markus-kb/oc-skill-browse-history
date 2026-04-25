@@ -1,6 +1,6 @@
 # Windows OpenCode Storage Reference
 
-This reference is based on the current local OpenCode source tree at `C:\Users\marku\Documents-Nonsync\code\local_repos\opencode`.
+This reference is based on the current OpenCode source layout for the storage, session, and project modules.
 
 ## Runtime Storage
 

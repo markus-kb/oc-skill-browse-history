@@ -27,8 +27,9 @@ Read `references/windows-storage.md` when schema details or source-backed ration
 
 1. If the local OpenCode server is known to be running, prefer its API for supported lookups.
 2. Otherwise run `scripts\opencode-memory.ps1` from PowerShell.
-3. Keep queries focused with `-Limit` and search terms.
-4. Summarize relevant findings; do not paste broad raw history dumps.
+3. For project-specific lookups, run from the project root or pass `-ProjectPath`.
+4. Keep queries focused with `-Limit` and search terms.
+5. Summarize relevant findings; do not paste broad raw history dumps.
 
 ## Commands
 
@@ -43,6 +44,8 @@ Read `references/windows-storage.md` when schema details or source-backed ration
 .\opencode-memory\scripts\opencode-memory.ps1 Plans -ProjectPath "C:\path\to\repo" -Limit 20 -Json
 .\opencode-memory\scripts\opencode-memory.ps1 Diffs -SessionId "ses_..." -Json
 ```
+
+The first argument is a positional command. The wrapper also accepts unambiguous switch-style command aliases such as `-Plans -Json` because agents sometimes infer that shape from PowerShell conventions.
 
 All database access must be read-only. If the reader cannot open the database read-only, stop and report the failure instead of creating or changing files.
 

@@ -11,7 +11,15 @@ param(
   [string] $SessionId,
   [string] $Search,
   [int] $Limit = 10,
-  [switch] $UseServer
+  [switch] $UseServer,
+  [switch] $Paths,
+  [switch] $Summary,
+  [switch] $Projects,
+  [switch] $RecentSessions,
+  [switch] $ProjectSessions,
+  [switch] $Messages,
+  [switch] $Plans,
+  [switch] $Diffs
 )
 
 $ErrorActionPreference = "Stop"
@@ -21,6 +29,38 @@ $Constants = @{
   DefaultDb = "opencode.db"
   RelativeDataRoot = ".local\share\opencode"
   SessionDiffRoot = "storage\session_diff"
+}
+
+function Resolve-Command {
+  $aliases = [ordered]@{
+    Paths = $Paths
+    Summary = $Summary
+    Projects = $Projects
+    RecentSessions = $RecentSessions
+    ProjectSessions = $ProjectSessions
+    Messages = $Messages
+    Plans = $Plans
+    Diffs = $Diffs
+  }
+
+  $selected = @($aliases.GetEnumerator() | Where-Object { $_.Value.IsPresent } | ForEach-Object { $_.Key })
+  if ($selected.Count -gt 1) {
+    throw "Use only one command switch. Received: $($selected -join ', ')"
+  }
+  if ($selected.Count -eq 1) {
+    if ($Command -ne "Summary") {
+      throw "Use either a positional command or a command switch, not both."
+    }
+    return $selected[0]
+  }
+  return $Command
+}
+
+function Resolve-ProjectPath {
+  if (-not [string]::IsNullOrWhiteSpace($ProjectPath)) {
+    return [System.IO.Path]::GetFullPath($ProjectPath)
+  }
+  return [System.IO.Path]::GetFullPath((Get-Location).Path)
 }
 
 function Get-FirstEnv {
@@ -110,6 +150,8 @@ function Resolve-ReaderRuntime {
   throw "Neither Bun nor Node is available. Install or use the same runtime family OpenCode uses for embedded SQLite access."
 }
 
+$Command = Resolve-Command
+$effectiveProjectPath = Resolve-ProjectPath
 $resolvedDataRoot = Resolve-DataRoot
 $resolvedStateRoot = Resolve-StateRoot
 $resolvedDbPath = Resolve-DatabasePath -ResolvedDataRoot $resolvedDataRoot
@@ -121,7 +163,7 @@ if ($Command -eq "Paths") {
     stateRoot = $resolvedStateRoot
     dbPath = $resolvedDbPath
     diffRoot = $diffRoot
-    defaultProjectPlans = if ($ProjectPath) { Join-Path $ProjectPath ".opencode\plans" } else { $null }
+    defaultProjectPlans = Join-Path $effectiveProjectPath ".opencode\plans"
     globalPlans = Join-Path $resolvedDataRoot "plans"
   })
   exit 0
@@ -157,7 +199,7 @@ $args = @(
 )
 
 if ($Json) { $args += "--json" }
-if ($ProjectPath) { $args += @("--project-path", $ProjectPath) }
+if ($effectiveProjectPath) { $args += @("--project-path", $effectiveProjectPath) }
 if ($SessionId) { $args += @("--session-id", $SessionId) }
 if ($Search) { $args += @("--search", $Search) }
 

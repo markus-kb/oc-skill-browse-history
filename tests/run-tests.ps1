@@ -31,7 +31,8 @@ function Read-Text {
 function Invoke-JsonCommand {
   param(
     [string[]] $Arguments,
-    [hashtable] $Environment = @{}
+    [hashtable] $Environment = @{},
+    [string] $WorkingDirectory = $RepoRoot
   )
 
   $script = Join-Path $RepoRoot "opencode-memory\scripts\opencode-memory.ps1"
@@ -47,6 +48,7 @@ function Invoke-JsonCommand {
   }
 
   try {
+    Push-Location -LiteralPath $WorkingDirectory
     $output = & pwsh -NoProfile -ExecutionPolicy Bypass -File $script @Arguments 2>&1
     if ($LASTEXITCODE -ne 0) {
       Add-Failure "Command failed: $($Arguments -join ' ')`n$output"
@@ -54,6 +56,7 @@ function Invoke-JsonCommand {
     }
     return ($output | Out-String | ConvertFrom-Json)
   } finally {
+    Pop-Location
     foreach ($key in $Environment.Keys) {
       [Environment]::SetEnvironmentVariable($key, $old[$key], "Process")
     }
@@ -62,7 +65,7 @@ function Invoke-JsonCommand {
 
 $agents = Read-Text "AGENTS.md"
 Assert-True ($agents -match "red-green-refactor") "AGENTS.md must require red-green-refactor TDD."
-Assert-True ($agents -match "tasks/todo\.md") "AGENTS.md must require task tracking in tasks/todo.md."
+Assert-True ($agents -match "\.tasks/todo\.md") "AGENTS.md must require ignored task tracking in .tasks/todo.md."
 Assert-True ($agents -match "\.gitignore") "AGENTS.md must require .gitignore maintenance."
 Assert-True ($agents -match "Windows 11") "AGENTS.md must require Windows 11-compatible user commands."
 
@@ -70,6 +73,16 @@ $gitignore = Read-Text ".gitignore"
 foreach ($pattern in @(".env", "*.log", "node_modules/", "*.db", "*.db-wal", "*.db-shm", ".DS_Store", "Thumbs.db")) {
   Assert-True ($gitignore.Contains($pattern)) ".gitignore must include $pattern."
 }
+Assert-True ($gitignore.Contains(".tasks/")) ".gitignore must include hidden local task scratch space."
+
+$readme = Read-Text "README.md"
+Assert-True ($readme -match "OpenCode") "README.md must be written for OpenCode users."
+Assert-True ($readme -match "Windows") "README.md must explain Windows support."
+Assert-True ($readme -match "Install|installation") "README.md must include installation guidance."
+Assert-True ($readme -match "PowerShell") "README.md must include PowerShell usage."
+Assert-True ($readme -match "sqlite3\.exe") "README.md must explain that sqlite3.exe is not required."
+Assert-True ($readme -match "Privacy|private|read-only") "README.md must cover privacy/read-only behavior."
+Assert-True ($readme -match "opencode-memory") "README.md must name the skill."
 
 $skill = Read-Text "opencode-memory/SKILL.md"
 Assert-True ($skill -match "Windows") "SKILL.md must be Windows-first."
@@ -246,6 +259,11 @@ db.close();
   $plans = Invoke-JsonCommand @("Plans", "-DbPath", $dbPath, "-DataRoot", $dataRoot, "-ProjectPath", $projectRoot, "-Json") @{}
   if ($null -ne $plans) {
     Assert-True ($plans[0].name -eq "1710000000000-plan.md") "Integration Plans should list project-local plan files."
+  }
+
+  $plansFromCurrentDirectory = Invoke-JsonCommand @("-Plans", "-DbPath", $dbPath, "-DataRoot", $dataRoot, "-Json") @{} $projectRoot
+  if ($null -ne $plansFromCurrentDirectory) {
+    Assert-True ($plansFromCurrentDirectory[0].name -eq "1710000000000-plan.md") "Integration -Plans should list current-directory project plans."
   }
 
   $diffs = Invoke-JsonCommand @("Diffs", "-DbPath", $dbPath, "-DataRoot", $dataRoot, "-SessionId", "ses_1", "-Json") @{}
