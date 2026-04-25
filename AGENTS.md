@@ -5,7 +5,7 @@
   - Red: write or update a failing automated test first.
   - Green: implement the smallest correct change that passes the test.
   - Refactor: improve structure without changing behavior, then rerun tests.
-- Track work in `tasks/todo.md` before implementation starts, mark items complete as progress is made, and add a review section with verification results.
+- Track work in ignored `.tasks/todo.md` before implementation starts when a checklist is useful, mark items complete as progress is made, and add a review section with verification results.
 - Prefer focused, incremental changes. Avoid unrelated refactors.
 - Document intent and responsibilities as if this were an open-source project, especially for non-obvious Windows/OpenCode storage behavior.
 

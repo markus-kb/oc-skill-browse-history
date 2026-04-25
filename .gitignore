@@ -12,6 +12,7 @@ node_modules/
 logs/
 
 # Test and temporary output
+.tasks/
 .artifacts/
 coverage/
 tmp/
