@@ -35,9 +35,9 @@ function Invoke-JsonCommand {
     [string] $WorkingDirectory = $RepoRoot
   )
 
-  $script = Join-Path $RepoRoot "opencode-memory\scripts\opencode-memory.ps1"
+  $script = Join-Path $RepoRoot "browse-history\scripts\browse-history.ps1"
   if (-not (Test-Path -LiteralPath $script)) {
-    Add-Failure "Missing PowerShell wrapper: opencode-memory\scripts\opencode-memory.ps1"
+    Add-Failure "Missing PowerShell wrapper: browse-history\scripts\browse-history.ps1"
     return $null
   }
 
@@ -82,9 +82,9 @@ Assert-True ($readme -match "Install|installation") "README.md must include inst
 Assert-True ($readme -match "PowerShell") "README.md must include PowerShell usage."
 Assert-True ($readme -match "sqlite3\.exe") "README.md must explain that sqlite3.exe is not required."
 Assert-True ($readme -match "Privacy|private|read-only") "README.md must cover privacy/read-only behavior."
-Assert-True ($readme -match "opencode-memory") "README.md must name the skill."
+Assert-True ($readme -match "browse-history") "README.md must name the skill."
 
-$skill = Read-Text "opencode-memory/SKILL.md"
+$skill = Read-Text "browse-history/SKILL.md"
 Assert-True ($skill -match "Windows") "SKILL.md must be Windows-first."
 Assert-True ($skill -match "PowerShell") "SKILL.md must prefer PowerShell."
 Assert-True ($skill -match "sqlite3\.exe") "SKILL.md must explicitly say external sqlite3.exe is not required."
@@ -96,7 +96,7 @@ Assert-True ($skill -match "%USERPROFILE%\\\.local\\share\\opencode\\opencode\.d
 Assert-True ($skill -match "storage\\session_diff") "SKILL.md must document session diff storage."
 Assert-True ($skill -match "\.opencode\\plans") "SKILL.md must document project-local plans."
 
-$reference = Read-Text "opencode-memory/references/windows-storage.md"
+$reference = Read-Text "browse-history/references/windows-storage.md"
 Assert-True ($reference -match "bun:sqlite") "Reference must cite Bun SQLite storage."
 Assert-True ($reference -match "node:sqlite") "Reference must cite Node SQLite storage."
 Assert-True ($reference -match "session") "Reference must document session storage."
@@ -104,12 +104,12 @@ Assert-True ($reference -match "message") "Reference must document message stora
 Assert-True ($reference -match "part") "Reference must document part storage."
 Assert-True ($reference -match "prompt-history\.jsonl") "Reference must explain the prompt-history.jsonl change."
 
-$wrapper = Read-Text "opencode-memory/scripts/opencode-memory.ps1"
+$wrapper = Read-Text "browse-history/scripts/browse-history.ps1"
 Assert-True ($wrapper -match "param") "PowerShell wrapper must define parameters."
-Assert-True ($wrapper -match "read-opencode-memory\.mjs") "PowerShell wrapper must invoke the JS reader."
+Assert-True ($wrapper -match "read-browse-history\.mjs") "PowerShell wrapper must invoke the JS reader."
 Assert-True ($wrapper -notmatch "sqlite3(\.exe)?\s") "PowerShell wrapper must not invoke sqlite3."
 
-$reader = Read-Text "opencode-memory/scripts/read-opencode-memory.mjs"
+$reader = Read-Text "browse-history/scripts/read-browse-history.mjs"
 Assert-True ($reader -match "bun:sqlite") "JS reader must support Bun SQLite."
 Assert-True ($reader -match "node:sqlite") "JS reader must support Node SQLite."
 Assert-True ($reader -match "readOnly|readonly") "JS reader must open SQLite read-only."
