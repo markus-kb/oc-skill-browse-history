@@ -184,7 +184,7 @@ if ($UseServer) {
   }
 }
 
-$reader = Join-Path $PSScriptRoot "read-browse-history.mjs"
+$reader = Join-Path $PSScriptRoot "read-oc-browse-history.mjs"
 if (-not (Test-Path -LiteralPath $reader)) {
   throw "Reader not found: $reader"
 }

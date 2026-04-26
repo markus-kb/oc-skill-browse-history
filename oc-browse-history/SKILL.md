@@ -1,5 +1,5 @@
 ---
-name: browse-history
+name: oc-browse-history
 description: >
   Browse and recall local OpenCode memory on Windows: sessions, messages, parts,
   todos, project records, saved plans, and session diffs. Use when the user asks
@@ -26,7 +26,7 @@ Read `references/windows-storage.md` when schema details or source-backed ration
 ## Workflow
 
 1. If the local OpenCode server is known to be running, prefer its API for supported lookups.
-2. Otherwise run `scripts\browse-history.ps1` from PowerShell.
+2. Otherwise run `scripts\oc-browse-history.ps1` from PowerShell.
 3. For project-specific lookups, run from the project root or pass `-ProjectPath`.
 4. Keep queries focused with `-Limit` and search terms.
 5. Summarize relevant findings; do not paste broad raw history dumps.
@@ -34,15 +34,15 @@ Read `references/windows-storage.md` when schema details or source-backed ration
 ## Commands
 
 ```powershell
-.\browse-history\scripts\browse-history.ps1 Paths -Json
-.\browse-history\scripts\browse-history.ps1 Summary -Json
-.\browse-history\scripts\browse-history.ps1 Projects -Limit 10 -Json
-.\browse-history\scripts\browse-history.ps1 RecentSessions -Limit 10 -Json
-.\browse-history\scripts\browse-history.ps1 ProjectSessions -ProjectPath "C:\path\to\repo" -Limit 10 -Json
-.\browse-history\scripts\browse-history.ps1 Messages -SessionId "ses_..." -Limit 50 -Json
-.\browse-history\scripts\browse-history.ps1 Search -Search "topic" -Limit 10 -Json
-.\browse-history\scripts\browse-history.ps1 Plans -ProjectPath "C:\path\to\repo" -Limit 20 -Json
-.\browse-history\scripts\browse-history.ps1 Diffs -SessionId "ses_..." -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 Paths -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 Summary -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 Projects -Limit 10 -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 RecentSessions -Limit 10 -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 ProjectSessions -ProjectPath "C:\path\to\repo" -Limit 10 -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 Messages -SessionId "ses_..." -Limit 50 -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 Search -Search "topic" -Limit 10 -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 Plans -ProjectPath "C:\path\to\repo" -Limit 20 -Json
+.\oc-browse-history\scripts\oc-browse-history.ps1 Diffs -SessionId "ses_..." -Json
 ```
 
 The first argument is a positional command. The wrapper also accepts unambiguous switch-style command aliases such as `-Plans -Json` because agents sometimes infer that shape from PowerShell conventions.
