@@ -1,4 +1,4 @@
-# Browse History for Windows
+# # OpenCode history browsing for Windows
 
 `browse-history` is a Windows-first OpenCode skill for looking up your local OpenCode history: recent sessions, messages, project records, saved plans, todos, and session diffs.
 
@@ -22,20 +22,20 @@ This skill follows that Windows-native model:
 
 ## Installation
 
-Copy the `browse-history` folder into your OpenCode skills directory.
+Copy the `oc-skill-browse-history` folder into your OpenCode skills directory.
 
 For a project-local skill:
 
 ```powershell
 New-Item -ItemType Directory -Force .opencode\skills | Out-Null
-Copy-Item -Recurse .\browse-history .opencode\skills\browse-history
+Copy-Item -Recurse .\oc-skill-browse-history .opencode\skills\oc-skill-browse-history
 ```
 
 For a global skill, copy it into your OpenCode global skills folder:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.config\opencode\skills" | Out-Null
-Copy-Item -Recurse .\browse-history "$env:USERPROFILE\.config\opencode\skills\browse-history"
+Copy-Item -Recurse .\oc-skill-browse-history "$env:USERPROFILE\.config\opencode\skills\oc-skill-browse-history"
 ```
 
 Restart OpenCode after copying the skill so it can be discovered.
@@ -61,13 +61,13 @@ The skill tells the agent to prefer a running OpenCode server/API when available
 You can also run the wrapper yourself:
 
 ```powershell
-.\browse-history\scripts\browse-history.ps1 Paths -Json
-.\browse-history\scripts\browse-history.ps1 RecentSessions -Limit 10 -Json
-.\browse-history\scripts\browse-history.ps1 Search -Search "Windows storage" -Limit 10 -Json
-.\browse-history\scripts\browse-history.ps1 Messages -SessionId "ses_..." -Limit 50 -Json
-.\browse-history\scripts\browse-history.ps1 Plans -ProjectPath "C:\path\to\repo" -Json
-.\browse-history\scripts\browse-history.ps1 -Plans -Json
-.\browse-history\scripts\browse-history.ps1 Diffs -SessionId "ses_..." -Json
+.\oc-skill-browse-history\scripts\browse-history.ps1 Paths -Json
+.\oc-skill-browse-history\scripts\browse-history.ps1 RecentSessions -Limit 10 -Json
+.\oc-skill-browse-history\scripts\browse-history.ps1 Search -Search "Windows storage" -Limit 10 -Json
+.\oc-skill-browse-history\scripts\browse-history.ps1 Messages -SessionId "ses_..." -Limit 50 -Json
+.\oc-skill-browse-history\scripts\browse-history.ps1 Plans -ProjectPath "C:\path\to\repo" -Json
+.\oc-skill-browse-history\scripts\browse-history.ps1 -Plans -Json
+.\oc-skill-browse-history\scripts\browse-history.ps1 Diffs -SessionId "ses_..." -Json
 ```
 
 For project plans, run the command from the project root or pass `-ProjectPath`. The switch form, such as `-Plans`, is accepted for agents that use PowerShell-style command switches.
@@ -112,12 +112,12 @@ You do not need `sqlite3.exe`.
 
 If OpenCode memory cannot be read:
 
-- Run `.\browse-history\scripts\browse-history.ps1 Paths -Json` to confirm resolved paths.
+- Run `.\oc-skill-browse-history\scripts\browse-history.ps1 Paths -Json` to confirm resolved paths.
 - Check that OpenCode has created `%USERPROFILE%\.local\share\opencode\opencode.db`.
 - If offline DB reads fail, confirm `node -e "import('node:sqlite')"` works or use Bun.
 - If you run OpenCode with a custom database, set `OPENCODE_DB` before running the wrapper.
 
-The skill reference at `browse-history\references\windows-storage.md` documents the Windows storage layout in more detail.
+The skill reference at `oc-skill-browse-history\references\windows-storage.md` documents the Windows storage layout in more detail.
 
 ## Credits
 
