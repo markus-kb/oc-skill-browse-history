@@ -1,4 +1,4 @@
-# # OpenCode history browsing for Windows
+# OpenCode history browsing for Windows
 
 `oc-browse-history` is a Windows-first OpenCode skill for looking up your local OpenCode history: recent sessions, messages, project records, saved plans, todos, and session diffs.
 
